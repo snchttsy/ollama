@@ -1,36 +1,34 @@
 import os
 import requests
 import pytesseract
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 from PIL import Image
 
-# Путь к результатам Marker
+# Путь к Tesseract-OCR (убедись, что установлен)
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+
+# Путь к результатам Marker (папки с .md и .jpeg)
 BASE_DIR = r"C:\Users\snchttsy\Ollama\marker\conversion_results"
+
 # Путь для сохранения выжимок
 OUTPUT_DIR = r"C:\Users\snchttsy\Ollama\summaries"
-
-# Убедимся, что папка существует
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# Задаём модель Ollama
-OLLAMA_MODEL = "mistral"
+# Модель Ollama
+OLLAMA_MODEL = "rev"  # твоя кастомная модель на основе mistral:7b
 
-# Функция: объединить текст из .md + OCR с изображений
+# Объединение текста из .md файла и OCR-распознанных изображений
 def extract_text(folder_path):
-    md_file = None
     full_text = ""
 
-    # Найдём .md файл
+    # Найдём .md файл и добавим его текст
     for file in os.listdir(folder_path):
         if file.endswith(".md"):
-            md_file = os.path.join(folder_path, file)
+            md_path = os.path.join(folder_path, file)
+            with open(md_path, "r", encoding="utf-8") as f:
+                full_text += f.read()
             break
 
-    if md_file:
-        with open(md_file, "r", encoding="utf-8") as f:
-            full_text += f.read()
-
-    # Добавим текст с изображений
+    # Добавим текст с изображений (OCR)
     for file in sorted(os.listdir(folder_path)):
         if file.lower().endswith(".jpeg"):
             image_path = os.path.join(folder_path, file)
@@ -43,17 +41,15 @@ def extract_text(folder_path):
 
     return full_text
 
-# Функция: отправить текст в Ollama
+# Отправка текста в Ollama
 def generate_summary(text):
     prompt = (
-        "Ты — научный ассистент. Проанализируй текст ниже и сделай краткую выжимку строго на русском языке. "
-        "Старайся использовать ясный, научный стиль. Не пиши по-английски. Просто суть без лишних рассуждений.\n\n"
-        f"{text}"
+        f"{text}\n\n"
+        "Сделай краткое, логически структурированное резюме статьи, сохраняя маркировку и научный стиль."
     )
 
     response = requests.post("http://localhost:11434/api/generate", json={
         "model": OLLAMA_MODEL,
-        "system": "Ты создаёшь краткие научные выжимки строго на русском языке.",
         "prompt": prompt,
         "stream": False
     })
@@ -70,10 +66,13 @@ for folder_name in os.listdir(BASE_DIR):
     if os.path.isdir(folder_path):
         print(f"Обработка: {folder_name}")
         text = extract_text(folder_path)
+
         if not text.strip():
             print("Нет текста для обработки.")
             continue
+
         summary = generate_summary(text)
+
         if summary:
             output_file = os.path.join(OUTPUT_DIR, folder_name + "_summary.md")
             with open(output_file, "w", encoding="utf-8") as f:
