@@ -1,11 +1,9 @@
- The list below includes papers by Mikhail Kovalev related to the field of intelligent information technologies:
+В приведенном тексте описывается информационная система для классификации эмоций речи на основе нейронной сети с графом знаний (eXnet). Автор - Михаил Ковалёв, исследователь технических наук, кафедра интеллектуальных информационных технологий в Белорусском государственном университете информатики и радиоэлектроники.
 
-* Title: Efficient Emotion Recognition in the Wild using eXnet. [Link](https://www.mdpi.com/1424-8220/20/4/1087)
-* Title: Integration of Large Language Models with Knowledge Bases of Intelligent Systems. (upcoming, OSTIS conference 2023). [Link](https://www.conference-ostis.org/)
-* Title: Capsule Graph Neural Networks. [Link](https://openreview.net/forum?id=Byl8BnRcYm)
-* Title: Integration of Knowledge Bases with Intelligent Systems. (upcoming, OSTIS conference 2023). [Link](https://www.conference-ostis.org/)
-* Title: On the Integration of Knowledge Bases and Language Models in Intelligent Systems. (upcoming, OSTIS conference 2023). [Link](https://www.conference-ostis.org/)
+   Система предназначена для классификации эмоций речи, используя граф знаний, модуль синтеза речи и компьютерное зрение. Особенностью ее является с-модель OStiS-CHCTEMBEI - семантическая окрестность понятий целевых классов, которая помогает системе классифицировать эмоции более точно.
 
-Mikhail V. Kovalev is a Researcher of Technical Sciences at the Department of Intelligent Information Technologies, Belarusian State University of Informatics and Radioelectronics. His email address is kovalev@bsuir.by and ORCID ID: [0000-0002-9606-9541](https://orcid.org/0000-0002-9606-9541)
+   Для работы системы необходимы файлы с текстом речи и справочниками по языкам и областям знаний, а также трансляция s-текста в стандартные форматы редакторов или sc-mexcma.
 
-Please note that the list may be updated as new papers are published or accepted for presentation at conferences. The conference details and links provided are for the OSTIS conference series, which is dedicated to intelligent systems, machine learning, and artificial intelligence research.
+   Приведенный файл с содержимым раздела "Предметная область предметных областей" показывает пример информации о предметной области, включающей классы разномощных связок, высказывание и объект исследования.
+
+   Эта система может быть использована для проведения анализа эмоций речи в рамках различных приложений, таких как: диалоговые системы, экранные читы, автоматическая транскрипция и т.д.

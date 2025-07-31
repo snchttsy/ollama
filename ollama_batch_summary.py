@@ -1,19 +1,19 @@
 import os
 import requests
 import pytesseract
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+pytesseract.pytesseract.tesseract_cmd = r"D:\ollama-1\Tesseract\tesseract.exe"
 from PIL import Image
 
 # Путь к результатам Marker
-BASE_DIR = r"C:\Users\snchttsy\Ollama\marker\conversion_results"
+BASE_DIR = r"D:\ollama-1\.venv\Lib\site-packages\conversion_results"
 # Путь для сохранения выжимок
-OUTPUT_DIR = r"C:\Users\snchttsy\Ollama\summaries"
+OUTPUT_DIR = r"D:\ollama-1\summaries"
 
 # Убедимся, что папка существует
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # Задаём модель Ollama
-OLLAMA_MODEL = "mistral"
+OLLAMA_MODEL = "rev"
 
 # Функция: объединить текст из .md + OCR с изображений
 def extract_text(folder_path):
