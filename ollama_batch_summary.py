@@ -53,7 +53,7 @@ def generate_summary(text):
 
     response = requests.post("http://localhost:11434/api/generate", json={
         "model": OLLAMA_MODEL,
-        "system": "Ты создаёшь краткие научные выжимки строго на русском языке.",
+        "system": " ",
         "prompt": prompt,
         "stream": False
     })
