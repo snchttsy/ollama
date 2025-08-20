@@ -45,8 +45,7 @@ def extract_text(folder_path):
 def generate_summary(text):
     prompt = (
         f"{text}\n\n"
-        "Сделай краткое, логически структурированное резюме статьи, сохраняя маркировку и научный стиль."
-    )
+            )
 
     response = requests.post("http://localhost:11434/api/generate", json={
         "model": OLLAMA_MODEL,
