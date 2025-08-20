@@ -13,7 +13,7 @@ OUTPUT_DIR = r"D:\ollama-1\summaries"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # Задаём модель Ollama
-OLLAMA_MODEL = "rev"
+OLLAMA_MODEL = "rev2"
 
 # Функция: объединить текст из .md + OCR с изображений
 def extract_text(folder_path):
@@ -36,7 +36,7 @@ def extract_text(folder_path):
             image_path = os.path.join(folder_path, file)
             try:
                 img = Image.open(image_path)
-                text = pytesseract.image_to_string(img, lang='rus+eng')
+                text = pytesseract.image_to_string(img, lang='rus')
                 full_text += "\n\n" + text
             except Exception as e:
                 print(f"Ошибка при обработке {image_path}: {e}")
@@ -46,14 +46,11 @@ def extract_text(folder_path):
 # Функция: отправить текст в Ollama
 def generate_summary(text):
     prompt = (
-        "Ты — научный ассистент. Проанализируй текст ниже и сделай краткую выжимку строго на русском языке. "
-        "Старайся использовать ясный, научный стиль. Не пиши по-английски. Просто суть без лишних рассуждений.\n\n"
         f"{text}"
     )
 
     response = requests.post("http://localhost:11434/api/generate", json={
         "model": OLLAMA_MODEL,
-        "system": " ",
         "prompt": prompt,
         "stream": False
     })

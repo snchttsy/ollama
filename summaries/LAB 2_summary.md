@@ -1,9 +1,54 @@
-Добро пожаловать, хороший помощник!
+* Изучено использование *JavaScript* для динамического изменения контента веб-страниц и взаимодействия с объектной моделью документа *DOM*. Определены основные методы манипуляции элементами HTML, их стилями и обработке событий пользователя.
+   * Использование *JavaScript* позволило реализовать такие интерактивные элементы, как появление изображений только при наведении на них, а также изменить фон веб-страницы с помощью кнопки.
+   * Исследованы современные возможности языка, включая обработку событий, работу с функциями и взаимодействие со структурой DOM.
 
-В этом тексте речь идет о лабораторной работе по веб-программированию на языке JavaScript. Описывается реализация двух функций:
+* Приложение A - реализация "LAZY LOADING"
+```
+document.addEventListener("DOMContentLoaded",function (){
+ let LazyImages=document.querySelectorAll("img.Lazy");
+ let observer=new IntersectionObserver((entries,observer)=>{
+ entries.forEach(entry => {
+ if(entry.isIntersecting){
+ let img=entry.target;
+ img.src=img.getAttribute("data-src");
+ img.classList.remove("Lazy");
+ observer.unobserve(img);
+ }
+ });
+ });
+ LazyImages.forEach(img => observer.observe(img));
+});
+```
 
-1) Реализация Lazy Loading (отложенной загрузки изображений) - это метод, при котором изображения не проигружаются автоматически, а загружаются только в момент необходимости. Это помогает ускорить загрузку страниц и снизить нагрузку на сетевой трафик. В приложении А представлена реализация этой функции, используя IntersectionObserver API.
-
-2) Реализация изменения фона сайта - эта функция меняет цвет фонового поля и изменяет картинку логотипа в зависимости от выбранной темы (темная или светлая). В приложении Б описан код, который используется для этого. Кроме того, функция сохраняет в локальное хранилище данные о выбранной теме и восстанавливает ее следующим разом, когда пользователь возвращается на сайт.
-
-В ходе лабораторной работы было изучено использование JavaScript для создания современных веб-приложений с интерактивными элементами и улучшенным взаимодействием с пользователем.
+* Приложение B - реализация изменения фоновых изображений
+```
+document.addEventListener("DOMContentLoaded", function () {
+const toggleButton = document.getElementById("settings-button");
+const body = document.body;
+const logo = document.getElementById("logo");
+const lightLogo = "assets/dawn.jpg";
+const darkLogo = "assets/Pica-enhance-20250301234303.jpg";
+function updateLogo() {
+ if (body.classList.contains("dark-theme")) {
+ logo.src = darkLogo;
+ } else {
+ logo.src = lightLogo;
+ }
+}
+if (localStorage.getItem("theme") === "dark") {
+ body.classList.add("dark-theme");
+}
+updateLogo();
+if (toggleButton) {
+ toggleButton.addEventListener("click", function () {
+ body.classList.toggle("dark-theme");
+ updateLogo();
+ if (body.classList.contains("dark-theme")) {
+ localStorage.setItem("theme", "dark");
+ } else {
+ localStorage.setItem("theme", "light");
+ }
+ });
+}
+});
+```
