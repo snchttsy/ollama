@@ -1,47 +1,49 @@
 import os
 import requests
 import pytesseract
+pytesseract.pytesseract.tesseract_cmd = r"D:\ollama-1\Tesseract\tesseract.exe"
 from PIL import Image
 
-# Путь к Tesseract-OCR (убедись, что установлен)
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-
-# Путь к результатам Marker (папки с .md и .jpeg)
-BASE_DIR = r"C:\Users\snchttsy\Ollama\marker\conversion_results"
-
+# Путь к результатам Marker
+BASE_DIR = r"D:\ollama-1\.venv\Lib\site-packages\conversion_results"
 # Путь для сохранения выжимок
-OUTPUT_DIR = r"C:\Users\snchttsy\Ollama\summaries"
+OUTPUT_DIR = r"D:\ollama-1\summaries"
+
+# Убедимся, что папка существует
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# Модель Ollama
-OLLAMA_MODEL = "rev"  # твоя кастомная модель на основе mistral:7b
+# Задаём модель Ollama
+OLLAMA_MODEL = "rev2"
 
-# Объединение текста из .md файла и OCR-распознанных изображений
+# Функция: объединить текст из .md + OCR с изображений
 def extract_text(folder_path):
+    md_file = None
     full_text = ""
 
-    # Найдём .md файл и добавим его текст
+    # Найдём .md файл
     for file in os.listdir(folder_path):
         if file.endswith(".md"):
-            md_path = os.path.join(folder_path, file)
-            with open(md_path, "r", encoding="utf-8") as f:
-                full_text += f.read()
+            md_file = os.path.join(folder_path, file)
             break
 
-    # Добавим текст с изображений (OCR)
+    if md_file:
+        with open(md_file, "r", encoding="utf-8") as f:
+            full_text += f.read()
+
+    # Добавим текст с изображений
     for file in sorted(os.listdir(folder_path)):
         if file.lower().endswith(".jpeg"):
             image_path = os.path.join(folder_path, file)
             try:
                 img = Image.open(image_path)
-                text = pytesseract.image_to_string(img, lang='rus+eng')
+                text = pytesseract.image_to_string(img, lang='rus')
                 full_text += "\n\n" + text
             except Exception as e:
                 print(f"Ошибка при обработке {image_path}: {e}")
 
     return full_text
 
-# Отправка текста в Ollama
+# Функция: отправить текст в Ollama
 def generate_summary(text):
     prompt = (
         f"{text}\n\n"
@@ -65,13 +67,10 @@ for folder_name in os.listdir(BASE_DIR):
     if os.path.isdir(folder_path):
         print(f"Обработка: {folder_name}")
         text = extract_text(folder_path)
-
         if not text.strip():
             print("Нет текста для обработки.")
             continue
-
         summary = generate_summary(text)
-
         if summary:
             output_file = os.path.join(OUTPUT_DIR, folder_name + "_summary.md")
             with open(output_file, "w", encoding="utf-8") as f:
